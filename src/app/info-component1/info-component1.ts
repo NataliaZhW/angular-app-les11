@@ -4,18 +4,12 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-info-component1',
-  standalone: true, // ← ДОБАВЬТЕ ЭТО
-  imports: [CommonModule, FormsModule], // ← ДОБАВЬТЕ ЭТО
+  standalone: true, 
+  imports: [CommonModule, FormsModule], 
   templateUrl: './info-component1.html',
   styleUrl: './info-component1.css'
 })
-// @Component({
-//   selector: 'app-info-component1',
-//   // standalone: true, 
-//   imports: [CommonModule, FormsModule], 
-//   templateUrl: './info-component1.html',
-//   styleUrl: './info-component1.css'
-// })
+
 export class InfoComponent1Component {
   cityName: string = 'Орёл';
   foundedYear: number = 1566;
