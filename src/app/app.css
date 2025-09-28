@@ -1,0 +1,72 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+.founded {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.attraction {
+  background: #f8f9fa;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.visited {
+  color: #27ae60;
+  text-decoration: line-through;
+}
+
+.not-visited {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+.add-form {
+  margin-top: 20px;
+  padding: 15px;
+  background: #ecf0f1;
+  border-radius: 5px;
+}
+
+input {
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 3px;
+}
+
+.many-attractions {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.few-attractions {
+  color: #f39c12;
+}

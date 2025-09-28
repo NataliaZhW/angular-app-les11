@@ -1,0 +1,181 @@
+<div class="city-container">
+  <!-- Интерполяция -->
+  <header class="city-header">
+    <h1>{{ cityName }} - город первого салюта</h1>
+    <p class="subtitle">Город на берегах Оки</p>
+  </header>
+
+  <!-- Привязка свойств -->
+  <section class="basic-info">
+    <h2>Основная информация</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Год основания</h3>
+        <p [class.highlight]="foundedYear < 1600">{{ foundedYear }}</p>
+        <small>Основан Иваном Грозным</small>
+      </div>
+      <div class="info-card">
+        <h3>Население</h3>
+        <p>{{ population | number }}</p>
+        <small>жителей</small>
+      </div>
+      <div class="info-card">
+        <h3>Площадь</h3>
+        <p>{{ area }} км²</p>
+        <small>территория города</small>
+      </div>
+      <div class="info-card">
+        <h3>Река</h3>
+        <p>{{ cityInfo.river }}</p>
+        <small>главная водная артерия</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Детальная информация -->
+  <section class="detailed-info">
+    <h2>Детальная информация</h2>
+    <div class="details">
+      <p><strong>Основатель:</strong> {{ cityInfo.founder }}</p>
+      <p><strong>Прозвище:</strong> {{ cityInfo.nickname }}</p>
+      <p><strong>Регион:</strong> {{ cityInfo.region }}</p>
+      <p><strong>Часовой пояс:</strong> {{ cityInfo.timeZone }}</p>
+      <p><strong>Герб:</strong> {{ getCoatOfArmsDescription() }}</p>
+    </div>
+  </section>
+
+  <!-- Исторические факты -->
+  <section class="historical-facts">
+    <h2>Исторические факты</h2>
+    <div class="facts-list">
+      <div *ngFor="let fact of historicalFacts; let i = index" class="fact-card">
+        <span class="fact-number">{{ i + 1 }}</span>
+        <p>{{ fact }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Директивы *ngIf и *ngFor -->
+  <section class="attractions">
+    <h2>Достопримечательности Орла</h2>
+    
+    <!-- Поиск -->
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Поиск достопримечательностей..."
+        class="search-input"
+      >
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats" *ngIf="attractions.length > 0">
+      <p>Всего достопримечательностей: {{ attractions.length }}</p>
+      <p>Посещено: {{ visitedCount }}</p>
+      <p>Не посещено: {{ attractions.length - visitedCount }}</p>
+      <p><strong>Прогресс:</strong> {{ (visitedCount / attractions.length * 100) | number:'1.0-0' }}%</p>
+    </div>
+
+    <!-- Список достопримечательностей -->
+    <div class="attractions-list">
+      <div *ngFor="let attraction of filteredAttractions; let i = index" 
+           class="attraction-card"
+           [class.visited]="attraction.visited"
+           [class.not-visited]="!attraction.visited">
+        
+        <div class="attraction-header">
+          <h3>{{ attraction.name }}</h3>
+          <span class="rating" [style.background-color]="getRatingColor(attraction.rating)">
+            {{ attraction.rating }}/5
+          </span>
+        </div>
+        
+        <p><strong>Тип:</strong> {{ attraction.type }}</p>
+        <p>
+          <strong>Статус:</strong> 
+          <span [ngClass]="{
+            'status-visited': attraction.visited,
+            'status-not-visited': !attraction.visited
+          }">
+            {{ attraction.visited ? '✅ Посещено' : '❌ Не посещено' }}
+          </span>
+        </p>
+        
+        <div class="attraction-actions">
+          <button 
+            (click)="toggleVisited(i)"
+            [class.btn-visited]="attraction.visited"
+            [class.btn-not-visited]="!attraction.visited">
+            {{ attraction.visited ? 'Отметить как непосещенное' : 'Отметить как посещенное' }}
+          </button>
+          <button 
+            (click)="removeAttraction(i)" 
+            class="btn-remove"
+            *ngIf="attraction.type === 'Новая'">
+            Удалить
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Сообщение если нет результатов -->
+    <div *ngIf="filteredAttractions.length === 0" class="no-results">
+      <p>Достопримечательности не найдены</p>
+    </div>
+  </section>
+
+  <!-- Двусторонняя привязка и обработка событий -->
+  <section class="add-attraction">
+    <h2>Добавить новую достопримечательность</h2>
+    <div class="add-form">
+      <input 
+        type="text" 
+        [(ngModel)]="newAttraction" 
+        placeholder="Название новой достопримечательности Орла"
+        (keyup.enter)="addAttraction()"
+        class="add-input"
+      >
+      <button 
+        (click)="addAttraction()" 
+        [disabled]="!newAttraction.trim()"
+        class="btn-add">
+        Добавить в список
+      </button>
+    </div>
+    <p class="hint">* Добавленные вами достопримечательности можно будет удалить</p>
+  </section>
+
+  <!-- ngSwitch -->
+  <section class="city-status">
+    <h2>Ваш статус знатока Орла</h2>
+    <div [ngSwitch]="visitedCount">
+      <p *ngSwitchCase="0" class="status-beginner">Вы только начинаете знакомство с городом!</p>
+      <p *ngSwitchCase="1" class="status-beginner">Вы посетили первую достопримечательность Орла!</p>
+      <p *ngSwitchCase="2" class="status-explorer">Вы начинающий исследователь города!</p>
+      <p *ngSwitchCase="3" class="status-explorer">Вы уже увидели много интересного в Орле!</p>
+      <p *ngSwitchCase="4" class="status-explorer">Вы хорошо знаете город!</p>
+      <p *ngSwitchCase="5" class="status-expert">Вы настоящий знаток Орла!</p>
+      <p *ngSwitchDefault class="status-expert">Вы эксперт по достопримечательностям Орла!</p>
+    </div>
+  </section>
+
+  <!-- Известные люди -->
+  <section class="famous-people">
+    <h2>Известные люди, связанные с Орлом</h2>
+    <div class="people-grid">
+      <div class="person-card">
+        <h3>И.С. Тургенев</h3>
+        <p>Великий русский писатель</p>
+      </div>
+      <div class="person-card">
+        <h3>Н.С. Лесков</h3>
+        <p>Русский писатель</p>
+      </div>
+      <div class="person-card">
+        <h3>Л.Н. Андреев</h3>
+        <p>Русский писатель</p>
+      </div>
+    </div>
+  </section>
+</div>
